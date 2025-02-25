@@ -8,27 +8,19 @@
   <script src="https://cdn.jsdelivr.net/npm/argon2-browser/dist/argon2-bundled.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // Clear all login-related data when `index.html` is opened
-      localStorage.removeItem("isAuthenticated");
-      sessionStorage.clear();
-      document.cookie.split(";").forEach(function (c) {
-          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      // As soon as index.html loads, clear login data
+      localStorage.removeItem("isAuthenticated");  // Remove authentication session
+      sessionStorage.clear();  // Clear all session storage (if used)
+      document.cookie.split(";").forEach(function (c) { 
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
-
-      // ✅ Perform refresh **only once per session**
-      if (!sessionStorage.getItem("hasRefreshed")) {
-          sessionStorage.setItem("hasRefreshed", "true"); // Mark that refresh has happened
-          setTimeout(() => {
-              location.reload(); // Refresh the page
-          }, 50); // Small delay to allow sessionStorage to update
-      }
   });
 </script>
-
-
 </head>
+
+
 <body>
   <div class="background"></div>
   <div class="login-container">
