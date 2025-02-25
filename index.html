@@ -8,16 +8,37 @@
   <script src="https://cdn.jsdelivr.net/npm/argon2-browser/dist/argon2-bundled.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // As soon as index.html loads, clear login data
-      localStorage.removeItem("isAuthenticated");  // Remove authentication session
-      sessionStorage.clear();  // Clear all session storage (if used)
-      document.cookie.split(";").forEach(function (c) { 
+      // ✅ Step 1: Immediately clear stored authentication
+      localStorage.removeItem("isAuthenticated");  
+      sessionStorage.clear();  
+      document.cookie.split(";").forEach(function (c) {
           document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
+
+      // ✅ Step 2: Perform a single page refresh (only once per session)
+      if (!sessionStorage.getItem("firstRefreshDone")) {
+          sessionStorage.setItem("firstRefreshDone", "true"); // Mark that the first refresh is done
+          setTimeout(() => {
+              location.reload(); // Refresh the page
+          }, 100); // Small delay to allow sessionStorage update
+      }
+
+      // ✅ Step 3: Set up an automatic session clear and refresh every 2 minutes
+      setInterval(() => {
+          console.log("Checking authentication, clearing session & refreshing...");
+          localStorage.removeItem("isAuthenticated");  
+          sessionStorage.clear();  
+          document.cookie.split(";").forEach(function (c) {
+              document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+          });
+
+          location.reload(); // Refresh every 2 minutes
+      }, 2 * 60 * 1000); // 2 minutes (120,000 milliseconds)
   });
 </script>
+
 </head>
 
 
