@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/argon2-browser/dist/argon2-bundled.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // Clear login session on page load
+      // Clear all login-related data when `index.html` is opened
       localStorage.removeItem("isAuthenticated");
       sessionStorage.clear();
       document.cookie.split(";").forEach(function (c) {
@@ -17,15 +17,16 @@
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
 
-      // ✅ Perform only ONE refresh when page is opened
-      if (!sessionStorage.getItem("pageRefreshed")) {
-          sessionStorage.setItem("pageRefreshed", "true"); // Mark as refreshed
+      // ✅ Perform refresh **only once per session**
+      if (!sessionStorage.getItem("hasRefreshed")) {
+          sessionStorage.setItem("hasRefreshed", "true"); // Mark that refresh has happened
           setTimeout(() => {
-              location.reload(); // Perform refresh
-          }, 50); // Small delay to ensure refresh happens
+              location.reload(); // Refresh the page
+          }, 50); // Small delay to allow sessionStorage to update
       }
   });
 </script>
+
 
 </head>
 <body>
