@@ -8,30 +8,42 @@
   <script src="https://cdn.jsdelivr.net/npm/argon2-browser/dist/argon2-bundled.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // ✅ Step 1: Immediately clear stored authentication
-      localStorage.removeItem("isAuthenticated");  
-      sessionStorage.clear();  
+      // ✅ Step 1: Check if the user came from the dashboard (using navigation type)
+      let navigationType = performance.getEntriesByType("navigation")[0].type;
+
+      // ✅ Step 2: Immediately clear stored authentication when opening index.html
+      localStorage.removeItem("isAuthenticated");
+      sessionStorage.clear();
       document.cookie.split(";").forEach(function (c) {
-          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
       });
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
 
-      // ✅ Step 2: Auto-clear authentication & refresh every 2 minutes (but no first-time refresh)
+      // ✅ Step 3: If user navigated back (Alt+Left, browser back button), refresh ONCE
+      if (navigationType === "back_forward" && !sessionStorage.getItem("backRefreshDone")) {
+          sessionStorage.setItem("backRefreshDone", "true"); // Mark refresh done
+          setTimeout(() => {
+              location.reload(); // Refresh page once
+          }, 100);
+      }
+
+      // ✅ Step 4: Auto-clear authentication & refresh every 2 minutes after back-navigation refresh
       setTimeout(() => {
           setInterval(() => {
               console.log("Checking authentication, clearing session & refreshing...");
-              localStorage.removeItem("isAuthenticated");  
-              sessionStorage.clear();  
+              localStorage.removeItem("isAuthenticated");
+              sessionStorage.clear();
               document.cookie.split(";").forEach(function (c) {
-                  document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                  document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
               });
 
               location.reload(); // Refresh every 2 minutes
-          }, 2 * 60 * 1000); // 2 minutes (120,000 milliseconds)
-      }, 2 * 60 * 1000); // Delay first execution by 2 minutes
+          }, 2 * 60 * 1000); // Every 2 minutes
+      }, 2 * 60 * 1000); // Start 2-minute interval refresh after initial back-navigation refresh
   });
 </script>
+
 
 </head>
 
