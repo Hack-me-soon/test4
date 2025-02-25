@@ -6,30 +6,28 @@
   <title>Chat Login</title>
   <link rel="stylesheet" href="styles2.css">
   <script src="https://cdn.jsdelivr.net/npm/argon2-browser/dist/argon2-bundled.min.js"></script>
-</head>
-<script>
+  <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // Clear all stored login data to prevent bypassing
-      localStorage.removeItem("isAuthenticated");  
-      sessionStorage.clear();  
-      document.cookie.split(";").forEach(function (c) { 
-          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      // Clear login session on page load
+      localStorage.removeItem("isAuthenticated");
+      sessionStorage.clear();
+      document.cookie.split(";").forEach(function (c) {
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
       });
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
 
-      // ✅ Refresh the page ONLY if it's the first time after opening
-      if (!sessionStorage.getItem("refreshed")) {
-          sessionStorage.setItem("refreshed", "true"); // Mark as refreshed
-          location.reload(); // Refresh the page
-      } else {
-          sessionStorage.removeItem("refreshed"); // Allow refresh next time
+      // ✅ Perform only ONE refresh when page is opened
+      if (!sessionStorage.getItem("pageRefreshed")) {
+          sessionStorage.setItem("pageRefreshed", "true"); // Mark as refreshed
+          setTimeout(() => {
+              location.reload(); // Perform refresh
+          }, 50); // Small delay to ensure refresh happens
       }
   });
 </script>
 
-
-
+</head>
 <body>
   <div class="background"></div>
   <div class="login-container">
