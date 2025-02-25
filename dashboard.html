@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="chatstyle.css">
 </head>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        setTimeout(() => {
-            if (localStorage.getItem("isAuthenticated") !== "true") {
-                window.location.replace("index.html"); // Redirect to login page
-            }
-        }, 100); // Small delay to prevent instant loop
-    });
-  </script>
+  document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+          if (localStorage.getItem("isAuthenticated") !== "true") {
+              window.location.replace("index.html"); // Redirect to login page
+          }
+      }, 100); // Small delay to prevent instant loop
+  });
+</script>
   
 <body>
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
@@ -75,11 +75,12 @@
     <script src="chatscript.js"></script>
 
     <script>
-        function logout() {
-            localStorage.removeItem("isAuthenticated"); // Remove login session
-            window.location.replace("index.html"); // Redirect without adding history
-        }
-      </script>
+  function logout() {
+      localStorage.removeItem("isAuthenticated"); // Remove login session
+      window.location.replace("index.html"); // Redirect without adding history
+  }
+</script>
+
       
       
 </body>
