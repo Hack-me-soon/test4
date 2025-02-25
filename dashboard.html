@@ -12,9 +12,17 @@
           if (localStorage.getItem("isAuthenticated") !== "true") {
               window.location.replace("index.html"); // Redirect to login page
           }
-      }, 100); // Small delay to prevent instant loop
+      }, 50); // Small delay to prevent instant loop
+  });
+
+  // Force page reload on navigation (Alt+Left/Right)
+  window.addEventListener("pageshow", function(event) {
+      if (event.persisted) {
+          location.reload();
+      }
   });
 </script>
+
   
 <body>
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
