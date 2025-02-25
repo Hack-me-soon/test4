@@ -17,27 +17,31 @@
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
 
-      // ✅ Step 2: Perform a single page refresh (only once per session)
+      // ✅ Step 2: Perform a single refresh (Only once per session)
       if (!sessionStorage.getItem("firstRefreshDone")) {
-          sessionStorage.setItem("firstRefreshDone", "true"); // Mark that the first refresh is done
+          sessionStorage.setItem("firstRefreshDone", "true"); // Mark refresh as done
           setTimeout(() => {
-              location.reload(); // Refresh the page
-          }, 100); // Small delay to allow sessionStorage update
+              location.reload(); // Perform refresh
+          }, 100); // Delay to ensure sessionStorage updates
+          return; // Stop execution here to avoid triggering interval refresh immediately
       }
 
-      // ✅ Step 3: Set up an automatic session clear and refresh every 2 minutes
-      setInterval(() => {
-          console.log("Checking authentication, clearing session & refreshing...");
-          localStorage.removeItem("isAuthenticated");  
-          sessionStorage.clear();  
-          document.cookie.split(";").forEach(function (c) {
-              document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
-          });
+      // ✅ Step 3: Set up automatic session clear and refresh every 2 minutes (but not immediately after first refresh)
+      setTimeout(() => {
+          setInterval(() => {
+              console.log("Checking authentication, clearing session & refreshing...");
+              localStorage.removeItem("isAuthenticated");  
+              sessionStorage.clear();  
+              document.cookie.split(";").forEach(function (c) {
+                  document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+              });
 
-          location.reload(); // Refresh every 2 minutes
-      }, 2 * 60 * 1000); // 2 minutes (120,000 milliseconds)
+              location.reload(); // Refresh every 2 minutes
+          }, 2 * 60 * 1000); // 2 minutes (120,000 milliseconds)
+      }, 2 * 60 * 1000); // Delay the first interval execution by 2 minutes
   });
 </script>
+
 
 </head>
 
