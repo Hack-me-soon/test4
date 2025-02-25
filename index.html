@@ -18,12 +18,16 @@
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
 
-      // ✅ Refresh the page immediately after opening
-      setTimeout(() => {
-          location.reload();
-      }, 100); // Small delay to prevent infinite refresh loops
+      // ✅ Refresh the page ONLY if it's the first time after opening
+      if (!sessionStorage.getItem("refreshed")) {
+          sessionStorage.setItem("refreshed", "true"); // Mark as refreshed
+          location.reload(); // Refresh the page
+      } else {
+          sessionStorage.removeItem("refreshed"); // Allow refresh next time
+      }
   });
 </script>
+
 
 
 <body>
