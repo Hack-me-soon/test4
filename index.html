@@ -9,15 +9,22 @@
 </head>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      localStorage.removeItem("isAuthenticated");  // Remove authentication session
-      sessionStorage.clear();  // Clear all session storage
+      // Clear all stored login data to prevent bypassing
+      localStorage.removeItem("isAuthenticated");  
+      sessionStorage.clear();  
       document.cookie.split(";").forEach(function (c) { 
           document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
 
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
+
+      // ✅ Refresh the page immediately after opening
+      setTimeout(() => {
+          location.reload();
+      }, 100); // Small delay to prevent infinite refresh loops
   });
 </script>
+
 
 <body>
   <div class="background"></div>
