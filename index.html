@@ -9,9 +9,8 @@
 </head>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // As soon as index.html loads, clear login data
       localStorage.removeItem("isAuthenticated");  // Remove authentication session
-      sessionStorage.clear();  // Clear all session storage (if used)
+      sessionStorage.clear();  // Clear all session storage
       document.cookie.split(";").forEach(function (c) { 
           document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
@@ -19,7 +18,6 @@
       console.log("Session cleared. You must log in again."); // Debugging (Remove in production)
   });
 </script>
-
 
 <body>
   <div class="background"></div>
